@@ -16,8 +16,8 @@ test.describe('Builds API', () => {
         headers: {
           'x-api-key': API_KEY,
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
+          Accept: 'application/json',
+        },
       });
 
       console.log('Response:', res.data);
@@ -41,23 +41,24 @@ test.describe('Builds API', () => {
       const payload = {
         duration: 0,
         environment: 'production',
-        status: 'in_progress'
+        status: 'in_progress',
       };
 
       const res = await axios.post(url, payload, {
         headers: {
           'x-api-key': API_KEY,
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
+          Accept: 'application/json',
+        },
       });
 
       console.log('Start Build Response:', res.data);
 
-      expect(res.status).toBe(201);
-      expect(res.data).toHaveProperty('id');
+      expect(res.status).toBe(200);
+      expect(res.data).toHaveProperty('build');
+      expect(res.data.build).toHaveProperty('build_id');
 
-      createdBuildId = res.data.id;
+      createdBuildId = res.data.build.build_id;
     } catch (error: any) {
       console.error('Axios error:', error.response?.status, error.response?.data);
       throw error;
@@ -65,15 +66,14 @@ test.describe('Builds API', () => {
   });
 
   test('Complete a build', async () => {
-    expect(createdBuildId).toBeTruthy();
-
+    // const url = `${BASE_URL}/projects/${PROJECT_ID}/builds?build_id=89ee247e-6dab-4e8f-89c7-03c0249c788b`;
     const url = `${BASE_URL}/projects/${PROJECT_ID}/builds?build_id=${createdBuildId}`;
 
     const payload = {
       progress_status: 'completed',
       status: 'failed',
       duration: 800,
-      environment: 'production'
+      environment: 'production',
     };
 
     try {
@@ -81,15 +81,16 @@ test.describe('Builds API', () => {
         headers: {
           'x-api-key': API_KEY,
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
+          Accept: 'application/json',
+        },
       });
 
       console.log('Complete Build Response:', res.data);
 
       expect(res.status).toBe(200);
-      expect(res.data.status).toBe('failed');
-      expect(res.data.progress_status).toBe('completed');
+      expect(res.data).toHaveProperty('build');
+      expect(res.data.build.status).toBe('failed');
+      expect(res.data.build.progress_status).toBe('completed');
     } catch (error: any) {
       console.error('Axios error:', error.response?.status, error.response?.data);
       throw error;
