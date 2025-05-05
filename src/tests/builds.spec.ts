@@ -34,30 +34,40 @@ test.describe('Builds API', () => {
     }
   });
 
-  test('Start a new build', async ({ request }) => {
-    const payload = {
-      duration: 0,
-      environment: 'production',
-      status: 'in_progress'
-    };
+  test('Start a new build', async () => {
+    const url = `${BASE_URL}/projects/${PROJECT_ID}/builds?days=7&environment=production`;
 
-    const res = await request.post(`${BASE_URL}/projects/${PROJECT_ID}/builds?days=7&environment=production`, {
-      headers: {
-        'x-api-key': API_KEY,
-        'Content-Type': 'application/json'
-      },
-      data: payload
-    });
+    try {
+      const payload = {
+        duration: 0,
+        environment: 'production',
+        status: 'in_progress'
+      };
 
-    expect(res.status()).toBeGreaterThanOrEqual(200);
-    const responseBody = await res.json();
-    expect(responseBody).toHaveProperty('id');
-    createdBuildId = responseBody.id;
+      const res = await axios.post(url, payload, {
+        headers: {
+          'x-api-key': API_KEY,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
+
+      console.log('Start Build Response:', res.data);
+
+      expect(res.status).toBe(201);
+      expect(res.data).toHaveProperty('id');
+
+      createdBuildId = res.data.id;
+    } catch (error: any) {
+      console.error('Axios error:', error.response?.status, error.response?.data);
+      throw error;
+    }
   });
 
-  test('Complete a build', async ({ request }) => {
-    // If dynamic, ensure the ID was created
+  test('Complete a build', async () => {
     expect(createdBuildId).toBeTruthy();
+
+    const url = `${BASE_URL}/projects/${PROJECT_ID}/builds?build_id=${createdBuildId}`;
 
     const payload = {
       progress_status: 'completed',
@@ -66,16 +76,23 @@ test.describe('Builds API', () => {
       environment: 'production'
     };
 
-    const res = await request.patch(`${BASE_URL}/projects/${PROJECT_ID}/builds?build_id=${createdBuildId}`, {
-      headers: {
-        'x-api-key': API_KEY,
-        'Content-Type': 'application/json'
-      },
-      data: payload
-    });
+    try {
+      const res = await axios.patch(url, payload, {
+        headers: {
+          'x-api-key': API_KEY,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
 
-    expect(res.status()).toBe(200);
-    const data = await res.json();
-    expect(data.status).toBe('failed');
+      console.log('Complete Build Response:', res.data);
+
+      expect(res.status).toBe(200);
+      expect(res.data.status).toBe('failed');
+      expect(res.data.progress_status).toBe('completed');
+    } catch (error: any) {
+      console.error('Axios error:', error.response?.status, error.response?.data);
+      throw error;
+    }
   });
 });
