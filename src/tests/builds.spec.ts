@@ -66,7 +66,6 @@ test.describe('Builds API', () => {
   });
 
   test('Complete a build', async () => {
-    // const url = `${BASE_URL}/projects/${PROJECT_ID}/builds?build_id=89ee247e-6dab-4e8f-89c7-03c0249c788b`;
     const url = `${BASE_URL}/projects/${PROJECT_ID}/builds?build_id=${createdBuildId}`;
 
     const payload = {
