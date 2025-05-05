@@ -150,16 +150,14 @@ test.describe('Builds API', () => {
       ],
     };
 
-    const response = await axios.post(
-      'http://localhost:3000/api/v1/projects/b3d59af9-c810-4f48-8e1e-edf25e5ad26f/test-cases',
-      payload,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': 'omni_live_ecc1acg7FV0JR4HsBftqyakKUJjwDbzvh1cm-_7aBMQ',
-        },
-      }
-    );
+    const url = `${BASE_URL}/projects/${PROJECT_ID}/test-cases`;
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+      },
+    });
 
     expect(response.status).toBe(200);
     console.log('Create passed test case:', response.data);
@@ -214,19 +212,17 @@ test.describe('Builds API', () => {
       ],
     };
 
-    const response = await axios.post(
-      'http://localhost:3000/api/v1/projects/b3d59af9-c810-4f48-8e1e-edf25e5ad26f/test-cases',
-      payload,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': 'omni_live_ecc1acg7FV0JR4HsBftqyakKUJjwDbzvh1cm-_7aBMQ',
-        },
-      }
-    );
+    const url = `${BASE_URL}/projects/${PROJECT_ID}/test-cases`;
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+      },
+    });
 
     expect(response.status).toBe(200);
-    console.log('Create failed test case:', response.data);
+    console.log('Create passed test case:', response.data);
   });
 
   test('Create a new test case - passed with steps', async () => {
@@ -266,18 +262,16 @@ test.describe('Builds API', () => {
       ],
     };
 
-    const response = await axios.post(
-      'http://localhost:3000/api/v1/projects/b3d59af9-c810-4f48-8e1e-edf25e5ad26f/test-cases',
-      payload,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': 'omni_live_ecc1acg7FV0JR4HsBftqyakKUJjwDbzvh1cm-_7aBMQ',
-        },
-      }
-    );
+    const url = `${BASE_URL}/projects/${PROJECT_ID}/test-cases`;
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+      },
+    });
 
     expect(response.status).toBe(200);
-    console.log('Create passed test case with steps:', response.data);
+    console.log('Create passed test case:', response.data);
   });
 });
