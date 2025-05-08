@@ -16,9 +16,10 @@ test('Sign In - Omni Dashboard', { tag: '@sanity' }, async ({ page }) => {
   // Capture screenshot before interaction (initial state)
   await expect(page).toHaveScreenshot('01-signin-page.png');
 
-  await signInPage.fillUsername(process.env.USERNAME!);
+  await signInPage.clickSignIn();
+  await signInPage.fillUsername(`${process.env.USERNAME}`);
   await signInPage.clickContinueAfterUsername();
-  await signInPage.fillPassword(process.env.PASSWORD!);
+  await signInPage.fillPassword("Test@100@#$");
   await signInPage.clickContinueAfterPassword();
 
   // Wait for navigation to Projects page

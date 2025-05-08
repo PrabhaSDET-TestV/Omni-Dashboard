@@ -16,10 +16,16 @@ export class SignInPage {
   }
 
   async fillPassword(password: string) {
-    await this.page.locator('#password-field').fill(password);
+    const passwordField = this.page.locator('#password-field');
+    await passwordField.waitFor({ state: 'visible' });
+    await passwordField.fill(password);
   }
 
   async clickContinueAfterPassword() {
     await this.page.getByRole('button', { name: 'Continue' }).last().click();
+  }
+
+  async clickSignIn() {
+    await this.page.locator('button:has(span.m_811560b9:has-text("Sign In"))').click();
   }
 }
