@@ -1,7 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
-
-// Load environment variables from .env file
 dotenv.config();
 
 export default defineConfig({
@@ -11,10 +9,15 @@ export default defineConfig({
   // retries: process.env.CI ? 2 : 0,
   // workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
-  timeout: 600000,
+  timeout: 30 * 1000,
+  expect: {
+    timeout: 5000,
+  },
   use: {
     // baseURL: process.env.BASE_URL,
     trace: 'retain-on-failure',
+    headless: false,
+    screenshot: 'on',
     ignoreHTTPSErrors: true,
     actionTimeout: 20000,
   },
