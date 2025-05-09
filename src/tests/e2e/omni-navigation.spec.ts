@@ -13,29 +13,54 @@ test('Sign In - Omni Dashboard', { tag: '@sanity' }, async ({ page }) => {
   // Navigate to Sign In page
   await signInPage.goto();
 
-  // Capture screenshot before interaction (initial state)
-  await expect(page).toHaveScreenshot('01-signin-page.png');
-
+  await page.waitForLoadState('networkidle');
+  // Capture full page screenshot before interaction (initial state)
+  await expect(page).toHaveScreenshot({ fullPage: true });
+  
   await signInPage.clickSignIn();
   await signInPage.fillUsername(`${process.env.USERNAME}`);
   await signInPage.clickContinueAfterUsername();
-  await signInPage.fillPassword("Test@100@#$");
+  await signInPage.fillPassword('Test@100@#$');
   await signInPage.clickContinueAfterPassword();
 
   // Wait for navigation to Projects page
   await expect(page).toHaveURL(/projects/);
+
+  await page.waitForLoadState('networkidle');
+  await page.waitForSelector('div[data-with-border="true"]', { state: 'visible' });
+
   // Screenshot after login success
-  await expect(page).toHaveScreenshot('02-projects-page.png');
+  await expect(page).toHaveScreenshot('projects-page.png');
 
   // Click into specific project
   await projectsPage.clickProjectByName('WDIO tests');
-  await myProjectsPage.clickTab('Builds');
+  await page.waitForSelector(`h2.m_8a5d1357.mantine-Title-root`, { state: 'visible' });
+  await expect(page).toHaveScreenshot('overview-tab.png');
 
-  // Screenshot on MyProjects - Builds tab
-  await expect(page).toHaveScreenshot('03-builds-tab.png');
+  await myProjectsPage.clickTab('Builds');
+  await page.waitForTimeout(3000);
+  await page.waitForSelector(`div[data-with-border='true']`, { state: 'visible' });
+  await expect(page).toHaveScreenshot('builds-tab.png');
+    
+  await myProjectsPage.clickTab('Trends');
+  await page.waitForTimeout(3000);
+  await page.waitForSelector(`div[data-with-border='true']`, { state: 'visible' });
+  await expect(page).toHaveScreenshot('trends-tab.png');
+
+  await myProjectsPage.clickTab('Anomalies');
+  await page.waitForTimeout(6000);
+  await page.waitForSelector(`div[data-with-border='true']`, { state: 'visible' });
+  await expect(page).toHaveScreenshot('anomalies-tab.png');
+
+  await myProjectsPage.clickTab('Settings');
+  await page.waitForTimeout(20000);
+  await page.waitForSelector(`div[data-with-border='true']`, { state: 'visible' });
+  await expect(page).toHaveScreenshot('settings-tab.png');
+
+  await topNav.toggleTheme();
+  await page.waitForLoadState('networkidle');
+  await expect(page).toHaveScreenshot('after-theme-toggle.png');
 
   await topNav.toggleTheme();
 
-  // Screenshot after theme toggle
-  await expect(page).toHaveScreenshot('04-after-theme-toggle.png');
 });
